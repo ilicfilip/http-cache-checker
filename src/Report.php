@@ -67,6 +67,35 @@ class Report {
 			return implode( "\n", $output );
 		}
 
+		// Redirect info.
+		if ( ! empty( $this->data['redirect'] ) ) {
+			$redirect = $this->data['redirect'];
+			$output[] = '--- Redirect Detected ---';
+			$output[] = sprintf(
+				'%d %s → %s',
+				$redirect['status_code'],
+				$redirect['original_url'],
+				$redirect['final_url']
+			);
+
+			$cc_raw = $redirect['headers']['cache_control']['raw'] ?? '';
+			if ( ! empty( $cc_raw ) ) {
+				$output[] = sprintf( '  Cache-Control: %s', $cc_raw );
+			} else {
+				$output[] = '  Cache-Control: (none)';
+			}
+
+			if ( ! empty( $redirect['issues'] ) ) {
+				$output[] = '  Issues:';
+				foreach ( $redirect['issues'] as $issue ) {
+					$icon     = $this->get_level_icon( $issue['level'] );
+					$output[] = sprintf( '    %s %s', $icon, $issue['title'] );
+					$output[] = sprintf( '      %s', $issue['description'] );
+				}
+			}
+			$output[] = '';
+		}
+
 		// Summary.
 		$summary   = $this->data['summary'];
 		$output[] = '--- Summary ---';
@@ -268,6 +297,14 @@ class Report {
 	 */
 	private function collect_all_issues(): array {
 		$all_issues = [];
+
+		// Redirect issues.
+		if ( ! empty( $this->data['redirect']['issues'] ) ) {
+			foreach ( $this->data['redirect']['issues'] as $issue ) {
+				$issue['url'] = $this->data['redirect']['original_url'] . ' → ' . $this->data['redirect']['final_url'];
+				$all_issues[] = $issue;
+			}
+		}
 
 		// Main page issues.
 		if ( $this->data['main_page'] && ! empty( $this->data['main_page']['issues'] ) ) {

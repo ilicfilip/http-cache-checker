@@ -87,6 +87,8 @@ if ( ! function_exists( 'wp_remote_request' ) ) {
 	function wp_remote_request( string $url, array $args = [] ) {
 		$ch = curl_init();
 
+		$max_redirects = $args['redirection'] ?? 5;
+
 		curl_setopt_array(
 			$ch,
 			[
@@ -94,8 +96,8 @@ if ( ! function_exists( 'wp_remote_request' ) ) {
 				CURLOPT_RETURNTRANSFER => true,
 				CURLOPT_HEADER         => true,
 				CURLOPT_TIMEOUT        => $args['timeout'] ?? 30,
-				CURLOPT_FOLLOWLOCATION => ( $args['redirection'] ?? 5 ) > 0,
-				CURLOPT_MAXREDIRS      => $args['redirection'] ?? 5,
+				CURLOPT_FOLLOWLOCATION => $max_redirects > 0,
+				CURLOPT_MAXREDIRS      => $max_redirects,
 				CURLOPT_USERAGENT      => $args['user-agent'] ?? 'CacheChecker/1.0',
 				CURLOPT_SSL_VERIFYPEER => $args['sslverify'] ?? true,
 			]
