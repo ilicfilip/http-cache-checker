@@ -9,126 +9,65 @@ Offloads HTTP cache header analysis to Cloudflare's edge network.
 - **Global edge**: Checks run from Cloudflare's nearest edge location
 - **Scalable**: Handle many concurrent checks without server strain
 
-## Wrangler CLI
+## NPM Scripts
 
-Wrangler is Cloudflare's CLI for managing Workers.
-
-### Installation
+Wrangler is installed as a local dependency. Use these npm scripts:
 
 ```bash
-# Install globally via npm
-npm install -g wrangler
-
-# Or use npx (no installation needed)
-npx wrangler <command>
-```
-
-### Authentication
-
-```bash
-# Login via browser (OAuth)
-wrangler login
-
-# Check who you're authenticated as
-wrangler whoami
-
-# Logout
-wrangler logout
-```
-
-### Project Setup
-
-```bash
-# Initialize a new worker project
-wrangler init my-worker
-
-# Or clone this and install dependencies
-cd worker
+# First, install dependencies
 npm install
+
+# Development
+npm run dev              # Start local dev server (hot reload)
+npm run dev:remote       # Dev with remote Cloudflare resources
+
+# Deployment
+npm run deploy           # Deploy to Cloudflare
+npm run deploy:prod      # Deploy to production environment
+
+# Monitoring & Logs
+npm run tail             # Stream real-time logs
+npm run tail:errors      # Stream only error logs
+npm run logs             # Pretty-formatted logs
+
+# Management
+npm run list             # List recent deployments
+npm run rollback         # Rollback to previous version
+npm run delete           # Delete the worker
+
+# Authentication
+npm run login            # Login to Cloudflare
+npm run whoami           # Check current auth
+
+# Secrets
+npm run secret:list      # List secrets
 ```
 
-### Development
+## Wrangler CLI Reference
+
+For commands not covered by npm scripts, use `npx wrangler`:
 
 ```bash
-# Start local dev server (hot reload)
-wrangler dev
+# Logout
+npx wrangler logout
 
-# Start dev server on specific port
-wrangler dev --port 8787
-
-# Dev server with remote resources (uses your Cloudflare account)
-wrangler dev --remote
-```
-
-### Deployment
-
-```bash
-# Deploy to Cloudflare
-wrangler deploy
-
-# Deploy to a specific environment
-wrangler deploy --env production
-
-# Deploy and get the URL
-wrangler deploy 2>&1 | grep "https://"
-```
-
-### Monitoring & Logs
-
-```bash
-# Stream real-time logs from deployed worker
-wrangler tail
-
-# Filter logs by status
-wrangler tail --status error
-
-# Filter logs by search term
-wrangler tail --search "error"
-
-# Get sampling rate (useful for high-traffic workers)
-wrangler tail --sampling-rate 0.1
-```
-
-### Managing Deployments
-
-```bash
-# List recent deployments
-wrangler deployments list
-
-# View deployment details
-wrangler deployments view <deployment-id>
-
-# Rollback to previous deployment
-wrangler rollback
-```
-
-### Secrets & Environment Variables
-
-```bash
-# Set a secret (interactive, hidden input)
-wrangler secret put MY_SECRET
-
-# Set secret from value
-echo "my-value" | wrangler secret put MY_SECRET
-
-# List secrets
-wrangler secret list
+# Set a secret (interactive)
+npx wrangler secret put MY_SECRET
 
 # Delete a secret
-wrangler secret delete MY_SECRET
-```
+npx wrangler secret delete MY_SECRET
 
-### Worker Information
+# View deployment details
+npx wrangler deployments view <deployment-id>
 
-```bash
-# List all your workers
-wrangler deployments list
+# Filter logs by search term
+npx wrangler tail --search "error"
 
-# Delete a worker
-wrangler delete
+# Sampling for high-traffic workers
+npx wrangler tail --sampling-rate 0.1
 
 # Get worker route information
-wrangler route list
+npx wrangler route list
 ```
 
 ## Configuration (wrangler.toml)
@@ -236,13 +175,13 @@ cd worker
 npm install
 
 # 3. Login to Cloudflare
-npx wrangler login
+npm run login
 
 # 4. Test locally
-npx wrangler dev
+npm run dev
 
 # 5. Deploy
-npx wrangler deploy
+npm run deploy
 ```
 
 After deployment, Wrangler outputs your worker URL:
