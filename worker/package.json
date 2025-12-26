@@ -1,0 +1,22 @@
+{
+  "name": "cache-checker-worker",
+  "version": "0.1.0",
+  "description": "Cloudflare Worker for HTTP cache header analysis",
+  "main": "src/index.js",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "tail": "wrangler tail"
+  },
+  "keywords": [
+    "cloudflare",
+    "worker",
+    "cache",
+    "http-headers"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "wrangler": "^3.0.0"
+  }
+}
