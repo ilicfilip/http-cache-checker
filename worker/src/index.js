@@ -19,9 +19,15 @@ export default {
 
 		const url = new URL(request.url);
 
-		// Health check endpoint.
+		// Health check endpoint (no auth required).
 		if (url.pathname === '/health') {
 			return jsonResponse({ status: 'ok', timestamp: new Date().toISOString() });
+		}
+
+		// All other endpoints require API key authentication.
+		const authError = validateApiKey(request, env);
+		if (authError) {
+			return authError;
 		}
 
 		// Main analysis endpoint.
@@ -34,6 +40,7 @@ export default {
 			return jsonResponse({
 				name: 'Cache Checker Worker',
 				version: '0.1.0',
+				authentication: 'Required via X-API-Key header or ?api_key= parameter',
 				endpoints: {
 					'/analyze': {
 						method: 'GET or POST',
@@ -45,7 +52,7 @@ export default {
 					},
 					'/health': {
 						method: 'GET',
-						description: 'Health check endpoint',
+						description: 'Health check endpoint (no auth required)',
 					},
 				},
 			});
@@ -54,6 +61,57 @@ export default {
 		return jsonResponse({ error: 'Not found' }, 404);
 	},
 };
+
+/**
+ * Validate API key from request.
+ * Accepts key via X-API-Key header or api_key query parameter.
+ */
+function validateApiKey(request, env) {
+	// Check if API_KEY secret is configured.
+	if (!env.API_KEY) {
+		// No API key configured - allow all requests (development mode).
+		return null;
+	}
+
+	const url = new URL(request.url);
+
+	// Check X-API-Key header first.
+	let providedKey = request.headers.get('X-API-Key');
+
+	// Fall back to query parameter.
+	if (!providedKey) {
+		providedKey = url.searchParams.get('api_key');
+	}
+
+	if (!providedKey) {
+		return jsonResponse(
+			{ error: 'Missing API key. Provide via X-API-Key header or api_key parameter.' },
+			401
+		);
+	}
+
+	// Constant-time comparison to prevent timing attacks.
+	if (!secureCompare(providedKey, env.API_KEY)) {
+		return jsonResponse({ error: 'Invalid API key' }, 403);
+	}
+
+	return null; // Auth successful.
+}
+
+/**
+ * Constant-time string comparison.
+ */
+function secureCompare(a, b) {
+	if (a.length !== b.length) {
+		return false;
+	}
+
+	let result = 0;
+	for (let i = 0; i < a.length; i++) {
+		result |= a.charCodeAt(i) ^ b.charCodeAt(i);
+	}
+	return result === 0;
+}
 
 /**
  * Handle the analyze request.
@@ -331,7 +389,7 @@ function jsonResponse(data, status = 200) {
 			'Content-Type': 'application/json',
 			'Access-Control-Allow-Origin': '*',
 			'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
-			'Access-Control-Allow-Headers': 'Content-Type',
+			'Access-Control-Allow-Headers': 'Content-Type, X-API-Key',
 		},
 	});
 }
@@ -344,7 +402,7 @@ function handleCors() {
 		headers: {
 			'Access-Control-Allow-Origin': '*',
 			'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
-			'Access-Control-Allow-Headers': 'Content-Type',
+			'Access-Control-Allow-Headers': 'Content-Type, X-API-Key',
 			'Access-Control-Max-Age': '86400',
 		},
 	});

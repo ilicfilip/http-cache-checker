@@ -20,6 +20,13 @@ class WorkerClient {
 	private string $worker_url;
 
 	/**
+	 * API key for authentication.
+	 *
+	 * @var string
+	 */
+	private string $api_key;
+
+	/**
 	 * Request timeout in seconds.
 	 *
 	 * @var int
@@ -30,10 +37,12 @@ class WorkerClient {
 	 * Constructor.
 	 *
 	 * @param string $worker_url Base URL of the Cloudflare Worker.
+	 * @param string $api_key    API key for authentication.
 	 * @param int    $timeout    Request timeout in seconds.
 	 */
-	public function __construct( string $worker_url, int $timeout = 60 ) {
+	public function __construct( string $worker_url, string $api_key, int $timeout = 60 ) {
 		$this->worker_url = rtrim( $worker_url, '/' );
+		$this->api_key    = $api_key;
 		$this->timeout    = $timeout;
 	}
 
@@ -55,6 +64,7 @@ class WorkerClient {
 				'timeout' => $this->timeout,
 				'headers' => [
 					'Content-Type' => 'application/json',
+					'X-API-Key'    => $this->api_key,
 				],
 				'body'    => wp_json_encode(
 					[
