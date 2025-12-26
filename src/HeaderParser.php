@@ -58,6 +58,7 @@ class HeaderParser {
 			'vary'            => $this->parse_vary( $normalized['vary'] ?? '' ),
 			'age'             => isset( $normalized['age'] ) ? (int) $normalized['age'] : null,
 			'cdn'             => $this->detect_cdn( $normalized ),
+			'cors'            => $this->parse_cors( $normalized ),
 			'content_type'    => $normalized['content-type'] ?? null,
 			'raw'             => $normalized,
 		];
@@ -249,5 +250,24 @@ class HeaderParser {
 		}
 
 		return $result;
+	}
+
+	/**
+	 * Parse CORS headers.
+	 *
+	 * @param array $headers Normalized headers.
+	 *
+	 * @return array CORS header info.
+	 */
+	private function parse_cors( array $headers ): array {
+		$acao = $headers['access-control-allow-origin'] ?? null;
+
+		return [
+			'allow_origin'      => $acao,
+			'has_cors'          => $acao !== null,
+			'allows_all'        => $acao === '*',
+			'allow_credentials' => isset( $headers['access-control-allow-credentials'] )
+				&& strtolower( $headers['access-control-allow-credentials'] ) === 'true',
+		];
 	}
 }

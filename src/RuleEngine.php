@@ -70,6 +70,10 @@ class RuleEngine {
 			$issues = array_merge( $issues, $this->check_api_issues( $headers ) );
 		}
 
+		if ( $resource_type === ResourceType::FONT ) {
+			$issues = array_merge( $issues, $this->check_font_issues( $headers ) );
+		}
+
 		// Check CDN-specific issues.
 		if ( $headers['cdn']['detected'] ) {
 			$issues = array_merge( $issues, $this->check_cdn_issues( $headers, $resource_type ) );
@@ -366,6 +370,29 @@ class RuleEngine {
 				'Missing stale-if-error on API',
 				'stale-if-error provides resilience during origin outages.',
 				self::LEVEL_INFO
+			);
+		}
+
+		return $issues;
+	}
+
+	/**
+	 * Check issues specific to font files.
+	 *
+	 * @param array $headers Parsed headers.
+	 *
+	 * @return array Issues found.
+	 */
+	private function check_font_issues( array $headers ): array {
+		$issues = [];
+
+		// Fonts need CORS headers for cross-origin loading (preload with crossorigin attribute).
+		if ( ! $headers['cors']['has_cors'] ) {
+			$issues[] = $this->create_issue(
+				'missing_cors_font',
+				'Missing CORS header on font',
+				'Fonts need Access-Control-Allow-Origin header for preload to work correctly.',
+				self::LEVEL_WARNING
 			);
 		}
 
