@@ -3,7 +3,7 @@
  * Plugin Name: HTTP Cache Header Checker
  * Plugin URI: https://github.com/progressplanner/cache-checker
  * Description: Analyzes website HTTP caching headers and flags misconfigurations based on best practices.
- * Version: 1.0.0
+ * Version: 0.1
  * Author: Progress Planner
  * Author URI: https://progressplanner.com
  * License: GPL-2.0-or-later
@@ -23,7 +23,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 // Define plugin constants.
-define( 'CACHE_CHECKER_VERSION', '1.0.0' );
+define( 'CACHE_CHECKER_VERSION', '0.1' );
 define( 'CACHE_CHECKER_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'CACHE_CHECKER_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 
