@@ -30,7 +30,7 @@ if ( ! preg_match( '/^https?:\/\//i', $url ) ) {
 }
 
 // Worker configuration.
-$worker_url = 'https://cache-checker.ilic-filip.workers.dev';
+$worker_url = 'https://cache-checker.ilicfilip.workers.dev';
 $api_key    = ''; // Leave empty if no API_KEY secret is set.
 
 // Simulate WordPress functions for standalone usage.
