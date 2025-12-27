@@ -9,6 +9,27 @@ Offloads HTTP cache header analysis to Cloudflare's edge network.
 - **Global edge**: Checks run from Cloudflare's nearest edge location
 - **Scalable**: Handle many concurrent checks without server strain
 
+## Cloudflare Plan Limits
+
+The Worker runs on Cloudflare's edge and is subject to plan limits:
+
+| Limit | Free | Paid ($5/mo) |
+|-------|------|--------------|
+| **CPU time per request** | 10ms | 50ms |
+| **Requests/day** | 100,000 | 10 million |
+| **Subrequests per request** | 50 | 1,000 |
+
+**What this means for Cache Checker:**
+
+- **CPU time**: This is compute time, not wall-clock time. Waiting for HTTP responses doesn't count, but parsing HTML and running rules does. 10ms is usually enough for moderate pages.
+- **Subrequests**: Each asset check is one subrequest. With 50 max, you can check ~49 assets per analysis (1 for main page + 49 assets).
+- **Requests/day**: Each call to `/analyze` counts as one request. 100k/day is plenty for most use cases.
+
+**Recommendations for Free tier:**
+- Keep `max_assets` at 30 or lower for safety
+- If you hit CPU limits, reduce `max_assets` further
+- Monitor with `npm run tail` to catch any errors
+
 ## NPM Scripts
 
 Wrangler is installed as a local dependency. Use these npm scripts:
