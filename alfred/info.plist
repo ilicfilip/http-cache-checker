@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>bundleid</key>
+	<string>com.cachechecker.alfred</string>
+	<key>category</key>
+	<string>Tools</string>
+	<key>connections</key>
+	<dict>
+		<key>3A4B5C6D-7E8F-9A0B-1C2D-3E4F5A6B7C8D</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>4B5C6D7E-8F9A-0B1C-2D3E-4F5A6B7C8D9E</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoaliasuid</key>
+				<string></string>
+			</dict>
+		</array>
+		<key>4B5C6D7E-8F9A-0B1C-2D3E-4F5A6B7C8D9E</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>5C6D7E8F-9A0B-1C2D-3E4F-5A6B7C8D9E0F</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoaliasuid</key>
+				<string></string>
+			</dict>
+		</array>
+	</dict>
+	<key>createdby</key>
+	<string>Cache Checker</string>
+	<key>description</key>
+	<string>Check HTTP cache headers for any URL</string>
+	<key>disabled</key>
+	<false/>
+	<key>name</key>
+	<string>Cache Checker</string>
+	<key>objects</key>
+	<array>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argumenttype</key>
+				<integer>0</integer>
+				<key>keyword</key>
+				<string>cache</string>
+				<key>subtext</key>
+				<string>Check HTTP cache headers for a URL</string>
+				<key>text</key>
+				<string>Cache Check</string>
+				<key>withspace</key>
+				<true/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.keyword</string>
+			<key>uid</key>
+			<string>3A4B5C6D-7E8F-9A0B-1C2D-3E4F5A6B7C8D</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>concurrently</key>
+				<false/>
+				<key>escaping</key>
+				<integer>102</integer>
+				<key>script</key>
+				<string></string>
+				<key>scriptargtype</key>
+				<integer>1</integer>
+				<key>scriptfile</key>
+				<string>cache-check.sh</string>
+				<key>type</key>
+				<integer>8</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>4B5C6D7E-8F9A-0B1C-2D3E-4F5A6B7C8D9E</string>
+			<key>version</key>
+			<integer>2</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>lastpathcomponent</key>
+				<false/>
+				<key>onlyshowifquerypopulated</key>
+				<true/>
+				<key>removeextension</key>
+				<false/>
+				<key>title</key>
+				<string>Cache Check Results</string>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.output.largetype</string>
+			<key>uid</key>
+			<string>5C6D7E8F-9A0B-1C2D-3E4F-5A6B7C8D9E0F</string>
+			<key>version</key>
+			<integer>2</integer>
+		</dict>
+	</array>
+	<key>readme</key>
+	<string>## Cache Checker Alfred Workflow
+
+Check HTTP cache headers for any URL using a Cloudflare Worker.
+
+### Setup (Required)
+
+1. Open this workflow in Alfred Preferences
+2. Click the [x] button in the top-right to open workflow variables
+3. Set `worker_url` to your Cache Checker Worker URL
+4. Optionally set `api_key` if your worker requires authentication
+
+### Usage
+
+Type `cache` followed by a URL:
+- `cache example.com`
+- `cache https://wordpress.org`
+
+### Output
+
+- 🟢 All good - no errors or warnings
+- 🟡 Has warnings - review recommended
+- 🔴 Has errors - needs attention</string>
+	<key>uidata</key>
+	<dict>
+		<key>3A4B5C6D-7E8F-9A0B-1C2D-3E4F5A6B7C8D</key>
+		<dict>
+			<key>xpos</key>
+			<integer>100</integer>
+			<key>ypos</key>
+			<integer>100</integer>
+		</dict>
+		<key>4B5C6D7E-8F9A-0B1C-2D3E-4F5A6B7C8D9E</key>
+		<dict>
+			<key>xpos</key>
+			<integer>300</integer>
+			<key>ypos</key>
+			<integer>100</integer>
+		</dict>
+		<key>5C6D7E8F-9A0B-1C2D-3E4F-5A6B7C8D9E0F</key>
+		<dict>
+			<key>xpos</key>
+			<integer>500</integer>
+			<key>ypos</key>
+			<integer>100</integer>
+		</dict>
+	</dict>
+	<key>variables</key>
+	<dict>
+		<key>worker_url</key>
+		<string>https://cache-checker.your-subdomain.workers.dev</string>
+		<key>api_key</key>
+		<string></string>
+	</dict>
+	<key>variablesdontexport</key>
+	<array>
+		<string>api_key</string>
+	</array>
+	<key>version</key>
+	<string>1.0.0</string>
+	<key>webaddress</key>
+	<string></string>
+</dict>
+</plist>
