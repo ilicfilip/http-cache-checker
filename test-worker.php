@@ -29,9 +29,32 @@ if ( ! preg_match( '/^https?:\/\//i', $url ) ) {
 	$url = 'https://' . $url;
 }
 
-// Worker configuration.
-$worker_url = 'https://cache-checker.ilicfilip.workers.dev';
-$api_key    = ''; // Leave empty if no API_KEY secret is set.
+// Load environment from .env file.
+$env_file = __DIR__ . '/.env';
+if ( file_exists( $env_file ) ) {
+	$lines = file( $env_file, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES );
+	foreach ( $lines as $line ) {
+		// Skip comments.
+		if ( strpos( trim( $line ), '#' ) === 0 ) {
+			continue;
+		}
+		// Parse KEY=value.
+		if ( strpos( $line, '=' ) !== false ) {
+			list( $key, $value ) = explode( '=', $line, 2 );
+			$_ENV[ trim( $key ) ] = trim( $value );
+		}
+	}
+}
+
+// Worker configuration from environment.
+$worker_url = $_ENV['WORKER_URL'] ?? '';
+$api_key    = $_ENV['WORKER_API_KEY'] ?? '';
+
+if ( empty( $worker_url ) ) {
+	echo "Error: WORKER_URL not set.\n";
+	echo "Create a .env file with WORKER_URL=https://cache-checker.your-subdomain.workers.dev\n";
+	exit( 1 );
+}
 
 // Simulate WordPress functions for standalone usage.
 if ( ! function_exists( 'wp_remote_post' ) ) {
