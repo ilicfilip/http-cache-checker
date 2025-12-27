@@ -1,0 +1,32 @@
+{
+  "name": "cache-checker-worker",
+  "version": "0.1.0",
+  "description": "Cloudflare Worker for HTTP cache header analysis",
+  "main": "src/index.js",
+  "scripts": {
+    "dev": "wrangler dev",
+    "dev:remote": "wrangler dev --remote",
+    "deploy": "wrangler deploy",
+    "deploy:prod": "wrangler deploy --env production",
+    "tail": "wrangler tail",
+    "tail:errors": "wrangler tail --status error",
+    "logs": "wrangler tail --format pretty",
+    "list": "wrangler deployments list",
+    "rollback": "wrangler rollback",
+    "whoami": "wrangler whoami",
+    "login": "wrangler login",
+    "secret:list": "wrangler secret list",
+    "delete": "wrangler delete"
+  },
+  "keywords": [
+    "cloudflare",
+    "worker",
+    "cache",
+    "http-headers"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "wrangler": "^4.0.0"
+  }
+}
