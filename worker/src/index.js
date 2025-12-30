@@ -168,6 +168,10 @@ async function handleAnalyze(request, env) {
 	}
 }
 
+// Browser-like User-Agent to avoid bot detection.
+const USER_AGENT =
+	'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36';
+
 /**
  * Main analysis function.
  */
@@ -213,7 +217,9 @@ async function analyzeUrl(url, options) {
 	try {
 		mainResponse = await fetch(finalUrl, {
 			headers: {
-				'User-Agent': 'CacheChecker/1.0 (Cloudflare Worker)',
+				'User-Agent': USER_AGENT,
+				Accept: 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+				'Accept-Language': 'en-US,en;q=0.5',
 			},
 			redirect: 'follow',
 		});
@@ -277,7 +283,9 @@ async function checkRedirect(url, headerParser, ruleEngine) {
 	try {
 		const response = await fetch(url, {
 			headers: {
-				'User-Agent': 'CacheChecker/1.0 (Cloudflare Worker)',
+				'User-Agent': USER_AGENT,
+				Accept: 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+				'Accept-Language': 'en-US,en;q=0.5',
 			},
 			redirect: 'manual', // Don't follow redirects.
 		});
@@ -348,7 +356,8 @@ async function analyzeAsset(asset, headerParser, ruleEngine) {
 		const response = await fetch(asset.url, {
 			method: 'HEAD',
 			headers: {
-				'User-Agent': 'CacheChecker/1.0 (Cloudflare Worker)',
+				'User-Agent': USER_AGENT,
+				'Accept-Language': 'en-US,en;q=0.5',
 			},
 		});
 
