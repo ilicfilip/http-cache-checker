@@ -4,6 +4,8 @@ HTTP Cache Header Analyzer - checks caching headers for a URL and its assets aga
 
 Based on [Jono Alderson's HTTP Caching Guide](https://www.jonoalderson.com/performance/http-caching/).
 
+Write-up: [I built a tool to audit HTTP cache headers](https://filip.ilic.sh/blog/http-cache-checker/) — why it exists and what it catches.
+
 ## Features
 
 - Analyzes Cache-Control, Expires, ETag, Last-Modified, Vary, Age headers
